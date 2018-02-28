@@ -5,7 +5,6 @@ import org.w3c.dom.Element;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
@@ -22,15 +21,11 @@ import java.util.List;
 
 public class FileBuilder {
 
-    public static String BuildConfig(List<ParsedClass> ParsedClasses){
+    public static String BuildConfig(List<ParsedClass> ParsedClasses) throws Exception {
         //Don't blame me for the DocumentBuilderFactory nonsense, blame w3c or whoever made the library..
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder = null;
-        try {
-            docBuilder = docFactory.newDocumentBuilder();
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        }
+        docBuilder = docFactory.newDocumentBuilder();
 
         // root elements
         Document doc = docBuilder.newDocument();
@@ -101,20 +96,15 @@ public class FileBuilder {
         }
         System.out.print("\n");
 
-        //Print it - save it to file...
-        try {
-            DOMSource domSource = new DOMSource(doc);
-            StringWriter writer = new StringWriter();
-            StreamResult result = new StreamResult(writer);
-            TransformerFactory tf = TransformerFactory.newInstance();
-            Transformer transformer = tf.newTransformer();
-            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-            transformer.transform(domSource, result);
-            return writer.toString();
-        } catch (javax.xml.transform.TransformerException e) {
-            e.printStackTrace();
-            return "Fail";
-        }
+        //Convert back to string.
+        DOMSource domSource = new DOMSource(doc);
+        StringWriter writer = new StringWriter();
+        StreamResult result = new StreamResult(writer);
+        TransformerFactory tf = TransformerFactory.newInstance();
+        Transformer transformer = tf.newTransformer();
+        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+        transformer.transform(domSource, result);
+        return writer.toString();
 
     }
 
