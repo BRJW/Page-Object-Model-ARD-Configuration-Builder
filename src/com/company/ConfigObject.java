@@ -7,14 +7,14 @@ import java.util.List;
 
 public class ParsedClass {
     String Name;
-    List<ParsedMethod> Methods;
+    List<ConfigAction> Methods;
 
     public ParsedClass(String Name){
         this.Name = Name;
-        Methods = new ArrayList<ParsedMethod>();
+        Methods = new ArrayList<ConfigAction>();
     }
 
-    public void addMethod(ParsedMethod Method) {
+    public void addMethod(ConfigAction Method) {
         this.Methods.add(Method);
     }
 
