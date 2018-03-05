@@ -46,7 +46,7 @@ public class Main {
         //For each file, parse all of the classes within that file.
         try {
             for (String Path : Paths) {
-                List<ConfigObject> configObjects = FileParser.Parse(Path, Language.getLanguage());
+                List<ConfigObject> configObjects = FileParser.Parse(Path, Language);
                 allConfigObjects.addAll(configObjects);
             }
         }

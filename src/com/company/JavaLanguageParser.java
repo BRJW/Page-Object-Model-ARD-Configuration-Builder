@@ -11,9 +11,13 @@ import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JavaLanguageParser{
+public class JavaLanguageParser extends LanguageParser {
 
-    public static List<ConfigObject> Parse(String FileContents){
+    public JavaLanguageParser(SupportedLanguages lang){
+        super(lang);
+    }
+
+    public  List<ConfigObject> Parse(String FileContents){
 
         CompilationUnit cu;
         cu = JavaParser.parse(FileContents);
