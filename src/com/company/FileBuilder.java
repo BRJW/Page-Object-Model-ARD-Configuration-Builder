@@ -21,7 +21,7 @@ import java.util.List;
 
 public class FileBuilder {
 
-    public static String BuildConfig(List<ParsedClass> ParsedClasses) throws Exception {
+    public static String BuildConfig(List<ConfigObject> configObjects) throws Exception {
         //Don't blame me for the DocumentBuilderFactory nonsense, blame w3c or whoever made the library..
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder = null;
@@ -48,13 +48,13 @@ public class FileBuilder {
         AutomationLayer.appendChild(Name);
         AutomationLayer.appendChild(Objects);
 
-        for(ParsedClass ParsedClass : ParsedClasses){
+        for(ConfigObject ConfigObject : configObjects){
             //Headers we always have to add per 'Class'
             Element Object = doc.createElement("Object");
             Objects.appendChild(Object);
 
             Element ObjectType = doc.createElement("ObjectType");
-            ObjectType.setTextContent(ParsedClass.Name);
+            ObjectType.setTextContent(ConfigObject.Name);
             Object.appendChild(ObjectType);
 
             Element ObjectActions = doc.createElement("ObjectActions");
@@ -63,17 +63,17 @@ public class FileBuilder {
             //Now we get to the meat of it
             Element Action = doc.createElement("Action");
             //Once per class we create an constructor for it, but really we should search for the classes constructor whilst parsing. (todo)
-            Action.setAttribute("ActionName",ParsedClass.Name + "_Instantiation");
-            String CodeSnippet = ParsedClass.Name + " ~ObjName_"+ ParsedClass.Name +"~ = new " + ParsedClass.Name + "();\n";
+            Action.setAttribute("ActionName", ConfigObject.Name + "_Instantiation");
+            String CodeSnippet = ConfigObject.Name + " ~ObjName_"+ ConfigObject.Name +"~ = new " + ConfigObject.Name + "();\n";
             Action.setAttribute("CodeSnippet",CodeSnippet);
             ObjectActions.appendChild(Action);
 
-            for(ParsedMethod Method : ParsedClass.Methods){
+            for(ConfigAction Method : ConfigObject.Methods){
                 //Each action gets added to to the config xml.
                 Element MethodAction = doc.createElement("Action");
                 MethodAction.setAttribute("ActionName",Method.Name);
                 //I.e. so they can refer to the particular instance with a variable in ARD.
-                String MethodCodeSnippet = "~ObjName_"+ ParsedClass.Name + "~.";
+                String MethodCodeSnippet = "~ObjName_"+ ConfigObject.Name + "~.";
                 MethodCodeSnippet+= Method.Name + "(";
 
                 //Add in all of the parameters, naming by their name and type.
