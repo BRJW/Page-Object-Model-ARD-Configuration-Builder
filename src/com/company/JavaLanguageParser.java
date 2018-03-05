@@ -11,20 +11,21 @@ import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JavaLanguageParser {
-    public static List<ParsedClass> Parse(String FileContents){
+public class JavaLanguageParser{
+
+    public static List<ConfigObject> Parse(String FileContents){
 
         CompilationUnit cu;
         cu = JavaParser.parse(FileContents);
-        List<ParsedClass> ParsedClasses = new ArrayList<>();
-        cu.accept(new ClassVisitor(), ParsedClasses);
-        return ParsedClasses;
+        List<ConfigObject> configObjects = new ArrayList<>();
+        cu.accept(new ClassVisitor(), configObjects);
+        return configObjects;
     }
 
-    private static class ClassVisitor extends VoidVisitorAdapter<List<ParsedClass>> {
+    private static class ClassVisitor extends VoidVisitorAdapter<List<ConfigObject>> {
 
         @Override
-        public void visit(ClassOrInterfaceDeclaration classDeclaration, List<ParsedClass> ParsedClasses){
+        public void visit(ClassOrInterfaceDeclaration classDeclaration, List<ConfigObject> configObjects){
 
             //Only retrieve public classes.. perhaps make an option
             if(classDeclaration.isPublic())
@@ -32,29 +33,29 @@ public class JavaLanguageParser {
                 //Get the name
                 String ClassName = classDeclaration.getNameAsString();
 
-                //Create a ParsedClass from the name of the class we are visiting
-                ParsedClass VisitedClass = new ParsedClass(ClassName);
+                //Create a ConfigObject from the name of the class we are visiting
+                ConfigObject VisitedClass = new ConfigObject(ClassName);
 
                 //For the parsed class, parse it for methods. (using JavaParser magic.
                 classDeclaration.accept(new MethodVisitor(), VisitedClass);
 
                 //Add the class to the list of all of the classes found for this .Java File...
-                ParsedClasses.add(VisitedClass);
+                configObjects.add(VisitedClass);
             }
         }
     }
 
     //Lots of bad practices to be found here!
-    private static class MethodVisitor extends VoidVisitorAdapter<ParsedClass>
+    private static class MethodVisitor extends VoidVisitorAdapter<ConfigObject>
     {
         @Override
-        public void visit(MethodDeclaration methodDeclaration, ParsedClass ParsedClass)
+        public void visit(MethodDeclaration methodDeclaration, ConfigObject ConfigObject)
         {
             //Get the name of the method we found by the JavaParser magic.
             String MethodName = methodDeclaration.getNameAsString();
 
             //Create a parsed method from the name
-            ParsedMethod Method = new ParsedMethod(MethodName);
+            ConfigAction Method = new ConfigAction(MethodName);
 
             //Get all the parameters
             NodeList<Parameter> Parameters = methodDeclaration.getParameters();
@@ -68,7 +69,7 @@ public class JavaLanguageParser {
             }
 
             //Add the parsed method to the parsed class
-            ParsedClass.addMethod(Method);
+            ConfigObject.addMethod(Method);
 
         }
 

@@ -1,15 +1,13 @@
 package com.company;
 
-import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
-
 import java.util.ArrayList;
 import java.util.List;
 
-public class ParsedClass {
+public class ConfigObject {
     String Name;
     List<ConfigAction> Methods;
 
-    public ParsedClass(String Name){
+    public ConfigObject(String Name){
         this.Name = Name;
         Methods = new ArrayList<ConfigAction>();
     }
