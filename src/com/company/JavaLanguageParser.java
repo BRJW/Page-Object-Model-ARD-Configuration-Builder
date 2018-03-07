@@ -87,6 +87,8 @@ public class JavaLanguageParser extends LanguageParser {
             }
 
             //Calculate the code snippet and apply it to the method we've found/created.
+            //With setters:
+            //Method.setCodeSnippet(createSnippet(ConfigObject));
             addCodeSnippet(Method, ConfigObject);
             //Add the parsed method to the parsed class
             ConfigObject.addMethod(Method);
@@ -96,6 +98,7 @@ public class JavaLanguageParser extends LanguageParser {
         //@Will should this be a void method with a side effect, or should we return a string then set the method to that result?? Not sure on best practice here.
         //Related- is there a way to specifically tag something in code for you to review?
         //Lastly, should this be a member of this visitor class, or perhaps the parser class above it- it doesn't much matter..
+        //Yeh having it in this class makes sense because you return Config objects with it. I would change it to returning a String and then setting the method with it
         private void addCodeSnippet(ConfigAction Method, ConfigObject ConfigObject){
             String MethodCodeSnippet = "~ObjName_"+ ConfigObject.Name + "~.";
             MethodCodeSnippet+= Method.Name + "(";
