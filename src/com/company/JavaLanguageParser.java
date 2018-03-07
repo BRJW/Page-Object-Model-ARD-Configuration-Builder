@@ -41,7 +41,7 @@ public class JavaLanguageParser extends LanguageParser {
                 ConfigObject VisitedClass = new ConfigObject(ClassName);
 
                 //Add instantiation method, and add it first to the list.
-                addInstantiationMethod(VisitedClass);
+                VisitedClass.addMethod(createInstantiationMethod(VisitedClass));
 
                 //For the parsed class, parse it for methods. (using JavaParser magic.
                 classDeclaration.accept(new MethodVisitor(), VisitedClass);
@@ -54,11 +54,11 @@ public class JavaLanguageParser extends LanguageParser {
 
         //I.e. the whole A a = new A(); biz
         //Again, do we use a void method, or return a string and do it inline in the parser?
-        public void addInstantiationMethod(ConfigObject ConfigObject) {
-            String MethodName = ConfigObject.Name + "_Instantiation";
+        private ConfigAction createInstantiationMethod(ConfigObject ConfigObject) {
+            String MethodName = ConfigObject.getName() + "_Instantiation";
             ConfigAction InstantiationMethod = new ConfigAction(MethodName);
-            InstantiationMethod.CodeSnippet = ConfigObject.Name + " ~ObjName_" + ConfigObject.Name + "~ = new " + ConfigObject.Name + "();\n";
-            ConfigObject.addMethod(InstantiationMethod);
+            InstantiationMethod.setCodeSnippet(ConfigObject.getName() + " ~ObjName_" + ConfigObject.getName() + "~ = new " + ConfigObject.getName() + "();\n");
+            return InstantiationMethod;
         }
 
     }
@@ -83,25 +83,23 @@ public class JavaLanguageParser extends LanguageParser {
                 String ParameterType = Parm.getType().toString();
 
                 //Add the parsed parameter to the parsed method.
-                Method.AddParameter(new ParsedMethodParameter(ParameterName,ParameterType));
+                Method.addParameter(new ParsedMethodParameter(ParameterName,ParameterType));
             }
 
             //Calculate the code snippet and apply it to the method we've found/created.
-            addCodeSnippet(Method, ConfigObject);
+            Method.setCodeSnippet(genCodeSnippet(Method, ConfigObject));
             //Add the parsed method to the parsed class
             ConfigObject.addMethod(Method);
 
         }
 
-        //@Will should this be a void method with a side effect, or should we return a string then set the method to that result?? Not sure on best practice here.
-        //Related- is there a way to specifically tag something in code for you to review?
-        //Lastly, should this be a member of this visitor class, or perhaps the parser class above it- it doesn't much matter..
-        private void addCodeSnippet(ConfigAction Method, ConfigObject ConfigObject){
-            String MethodCodeSnippet = "~ObjName_"+ ConfigObject.Name + "~.";
-            MethodCodeSnippet+= Method.Name + "(";
+
+        private String genCodeSnippet(ConfigAction Method, ConfigObject ConfigObject){
+            String MethodCodeSnippet = "~ObjName_"+ ConfigObject.getName() + "~.";
+            MethodCodeSnippet+= Method.getName() + "(";
 
             //Add in all of the parameters, naming by their name and type.
-            for(ParsedMethodParameter Parameter : Method.Parameters){
+            for(ParsedMethodParameter Parameter : Method.getParameters()){
                 //No need for string builder we don't have 1000000 arguments.. this loop will go round like 20 times max.
                 MethodCodeSnippet+= "~" + Parameter.Type + "_" + Parameter.Name + "~";
                 MethodCodeSnippet+=",";
@@ -111,7 +109,7 @@ public class JavaLanguageParser extends LanguageParser {
             MethodCodeSnippet = MethodCodeSnippet.replaceAll(",$", "");
             // Close the brackets and add a line break at the end.
             MethodCodeSnippet+=");\n";
-            Method.CodeSnippet = MethodCodeSnippet;
+            return MethodCodeSnippet;
         }
 
     }

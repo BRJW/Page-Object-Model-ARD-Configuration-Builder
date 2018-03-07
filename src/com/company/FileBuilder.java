@@ -55,7 +55,7 @@ public class FileBuilder {
             Objects.appendChild(Object);
 
             Element ObjectType = doc.createElement("ObjectType");
-            ObjectType.setTextContent(ConfigObject.Name);
+            ObjectType.setTextContent(ConfigObject.getName());
             Object.appendChild(ObjectType);
 
             Element ObjectActions = doc.createElement("ObjectActions");
@@ -63,12 +63,12 @@ public class FileBuilder {
 
             //Instantiation now handled if applicable in the parser.
 
-            for(ConfigAction Method : ConfigObject.Methods){
+            for(ConfigAction Method : ConfigObject.getMethods()){
                 //Each action gets added to to the config xml.
                 Element MethodAction = doc.createElement("Action");
-                MethodAction.setAttribute("ActionName",Method.Name);
+                MethodAction.setAttribute("ActionName",Method.getName());
                 //I.e. so they can refer to the particular instance with a variable in ARD.
-                String MethodCodeSnippet = Method.CodeSnippet;
+                String MethodCodeSnippet = Method.getCodeSnippet();
                 //All of the text we're building simply gets added as an attribute of the Action.
                 MethodAction.setAttribute("CodeSnippet",MethodCodeSnippet);
 

@@ -4,9 +4,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ConfigAction {
-    String Name;
-    List<ParsedMethodParameter> Parameters;
-    String CodeSnippet;
+
+    private String Name;
+    private List<ParsedMethodParameter> Parameters;
+    private String CodeSnippet;
+
+    public String getName() {
+        return Name;
+    }
+
+    //never used
+    public void setName(String name) {
+        Name = name;
+    }
+
+    public String getCodeSnippet() {
+        return CodeSnippet;
+    }
+
+    public void setCodeSnippet(String codeSnippet) {
+        CodeSnippet = codeSnippet;
+    }
 
     ConfigAction(String Name){
         this.Name = Name;
@@ -14,8 +32,15 @@ public class ConfigAction {
         CodeSnippet = ""; //in the worst case we have an empty code snippet. - should we have a more explicit failure?
     }
 
-    void AddParameter(ParsedMethodParameter Parameter){
+    public void addParameter(ParsedMethodParameter Parameter){
         Parameters.add(Parameter);
     }
+
+    public List<ParsedMethodParameter> getParameters() {
+        return Parameters;
+    }
+
     //Getters and setters yes or no?
 }
+
+
