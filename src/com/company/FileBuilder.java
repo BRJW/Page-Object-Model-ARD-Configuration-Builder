@@ -44,6 +44,7 @@ public class FileBuilder {
         Element Name = doc.createElement("Name");
         Name.setTextContent("POM");
         Element Objects = doc.createElement("Objects");
+
         AutomationLayer.appendChild(Guid);
         AutomationLayer.appendChild(Name);
         AutomationLayer.appendChild(Objects);
@@ -54,39 +55,20 @@ public class FileBuilder {
             Objects.appendChild(Object);
 
             Element ObjectType = doc.createElement("ObjectType");
-            ObjectType.setTextContent(ConfigObject.Name);
+            ObjectType.setTextContent(ConfigObject.getName());
             Object.appendChild(ObjectType);
 
             Element ObjectActions = doc.createElement("ObjectActions");
             Object.appendChild(ObjectActions);
 
-            //Now we get to the meat of it
-            Element Action = doc.createElement("Action");
-            //Once per class we create an constructor for it, but really we should search for the classes constructor whilst parsing. (todo)
-            Action.setAttribute("ActionName", ConfigObject.Name + "_Instantiation");
-            String CodeSnippet = ConfigObject.Name + " ~ObjName_"+ ConfigObject.Name +"~ = new " + ConfigObject.Name + "();\n";
-            Action.setAttribute("CodeSnippet",CodeSnippet);
-            ObjectActions.appendChild(Action);
+            //Instantiation now handled if applicable in the parser.
 
-            for(ConfigAction Method : ConfigObject.Methods){
+            for(ConfigAction Method : ConfigObject.getMethods()){
                 //Each action gets added to to the config xml.
                 Element MethodAction = doc.createElement("Action");
-                MethodAction.setAttribute("ActionName",Method.Name);
+                MethodAction.setAttribute("ActionName",Method.getName());
                 //I.e. so they can refer to the particular instance with a variable in ARD.
-                String MethodCodeSnippet = "~ObjName_"+ ConfigObject.Name + "~.";
-                MethodCodeSnippet+= Method.Name + "(";
-
-                //Add in all of the parameters, naming by their name and type.
-                for(ParsedMethodParameter Parameter : Method.Parameters){
-                    //No need for string builder we don't have 1000000 arguments.. this loop will go round like 20 times max.
-                    MethodCodeSnippet+= "~" + Parameter.Type + "_" + Parameter.Name + "~";
-                    MethodCodeSnippet+=",";
-                }
-
-                //Remove the last comma.
-                MethodCodeSnippet = MethodCodeSnippet.replaceAll(",$", "");
-                // Close the brackets and add a line break at the end.
-                MethodCodeSnippet+=");\n";
+                String MethodCodeSnippet = Method.getCodeSnippet();
                 //All of the text we're building simply gets added as an attribute of the Action.
                 MethodAction.setAttribute("CodeSnippet",MethodCodeSnippet);
 
