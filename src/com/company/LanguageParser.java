@@ -2,7 +2,7 @@ package com.company;
 
 import java.util.List;
 
-abstract class LanguageParser {
+abstract public class LanguageParser {
 
     private SupportedLanguages language;
 

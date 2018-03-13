@@ -101,7 +101,7 @@ public class JavaLanguageParser extends LanguageParser {
             //Add in all of the parameters, naming by their name and type.
             for(ParsedMethodParameter Parameter : Method.getParameters()){
                 //No need for string builder we don't have 1000000 arguments.. this loop will go round like 20 times max.
-                MethodCodeSnippet+= "~" + Parameter.Type + "_" + Parameter.Name + "~";
+                MethodCodeSnippet+= "~" + Parameter.getType() + "_" + Parameter.getName() + "~";
                 MethodCodeSnippet+=",";
             }
 
