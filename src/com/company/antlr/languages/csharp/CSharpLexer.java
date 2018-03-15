@@ -1,5 +1,6 @@
 // Generated from C:/Users/johbe07/OneDrive/OneDrive - CA Technologies/Projects/POM/POMConfigurationBuilder/src/com/company/antlr/languages/csharp\CSharpLexer.g4 by ANTLR 4.7
 package com.company.antlr.languages.csharp;
+
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.atn.ATN;
 import org.antlr.v4.runtime.atn.ATNDeserializer;
