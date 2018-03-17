@@ -1,10 +1,7 @@
 package com.company;
 
-import org.apache.commons.cli.ParseException;
-
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class Main {
@@ -12,7 +9,6 @@ public class Main {
 
         String InputDir;
         String OutputDir;
-        String[] Extensions;
         SupportedLanguages Language;
 
         try {

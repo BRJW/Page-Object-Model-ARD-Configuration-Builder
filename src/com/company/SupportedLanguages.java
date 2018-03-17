@@ -2,7 +2,8 @@ package com.company;
 
 public enum SupportedLanguages {
 
-    JAVA ("Java", new String[]{"java"});
+    JAVA ("Java", new String[]{"java"}), CSHARP ("CSharp", new String[]{"cs"});
+
 
     private final String language;
     private final String[] extension;
